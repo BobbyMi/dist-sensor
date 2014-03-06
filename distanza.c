@@ -23,12 +23,40 @@ int distanza(int valMedi[], float dist[], int numElem){
 		}
 		if (valMedi[i] < soglia[1]){
 			dist[i] = 1/((valMedi[i] - soglia[0])*inv_m[i] +soglia[0]);
+			continue;
 		}
-		if (valMedi[i] < soglia[2]){
 
+		if (valMedi[i] < soglia[2]){
 			dist[i] = 1/((valMedi[i] - soglia[1])*inv_m[i] + soglia[1]);
 			continue;
 		}
+
+		if (valMedi[i] < soglia[3]){
+			dist[i] = 1/((valMedi[i] - soglia[2])*inv_m[i] + soglia[2]);
+			continue;
+		}
+		if (valMedi[i] < soglia[4]){
+			dist[i] = 1/((valMedi[i] - soglia[3])*inv_m[i] + soglia[3]);
+			continue;
+		}
+		if (valMedi[i] < soglia[5]){
+			dist[i] = 1/((valMedi[i] - soglia[4])*inv_m[i] + soglia[4]);
+			continue;
+		}
+		if (valMedi[i] < soglia[6]){
+			dist[i] = 1/((valMedi[i] - soglia[5])*inv_m[i] + soglia[5]);
+			continue;
+		}
+		if (valMedi[i] < soglia[7]){
+			dist[i] = 1/((valMedi[i] - soglia[6])*inv_m[i] + soglia[6]);
+			continue;
+		}
+
+		if (valMedi[i] < soglia[8]){
+			dist[i] = 1/((valMedi[i] - soglia[7])*inv_m[i] + soglia[7]);
+			continue;
+		}
+
 	}
 	return 0;
 }
