@@ -10,6 +10,7 @@
 #include "gyro_init.h"
 #include "accel_init.h"
 #include "compass_init.h"
+#include "mem.h"
 
 extern volatile unsigned int contatore;
 
@@ -21,6 +22,7 @@ void main(void) {
 	volatile unsigned char valore;
 	double temperatura;
 	char conv[30], stato;
+	_cellaDist vCell[36], cellaAtt;
 	unsigned char buff[8] = {0,0,0,0,0,0,0,0};
 	int x, y ,z;
 	gyro G;

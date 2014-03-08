@@ -39,6 +39,7 @@ int fputs(const char *_ptr, register FILE *_fp);
 void reduceToChar(float f, unsigned char distS[], int i);
 int distanza(int valMedi[], unsigned char distS[], int numElem);
 
+
 ///////////////////////////////////////////////
 #define		NACK_ERR		1
 #define		OK				0

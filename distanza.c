@@ -21,7 +21,6 @@ int distanza(int valMedi[], unsigned char distS[], int numElem){
 /// x = 1/F = (V1 -V0)/((V - V0)*(F1 - F0) + F0 * (V1 - V0))
 	int i, distanzaR;
 	float f, f1;
-
 	for (i = 0; i < numElem; i++){
 		if (valMedi[i] < soglia[0]){
 			distS[i] = 255;
@@ -98,10 +97,31 @@ void reduceToChar(float f, unsigned char distS[], int indice){
 ///
 /// copia della cella
 ///
-void copiaC(unsigned char src[], unsigned char dest[] ){
+void copiaC(_cellaDist *src, _cellaDist *dest ){
 	int i = 0;
 	for (i = 0; i < NUM_ELEM; i++)
-		dest[i] = src[i];
+		dest->dist[i] = src->dist[i];
+	dest->attuale = src->attuale;
+	dest->coeffParz = src->coeffParz;
+	dest->id_cell = src->id_cell;
+	dest->tipo = src->tipo;
+	dest->reserved = src->reserved;
+	dest->riga = src->riga;
+	dest->colonna = src->colonna;
+	dest->direzione = src->direzione;
+
+}
+
+///
+/// aggiorna lo stato della cella attiva
+void aggiornaCellaAttiva(_cellaDist *src, _cellaDist *newCell){
+
+}
+
+///
+///
+void aggiornaCellaMobile(){
+
 
 }
 
