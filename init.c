@@ -32,6 +32,31 @@ void initUART1(unsigned long bitRate, unsigned long fdco){
 
 }
 
+/// initialize UART 1
+void initUART0(unsigned long bitRate, unsigned long fdco){
+
+	unsigned long baud;
+
+	P3SEL |= BIT4 + BIT3;                   // P3.3,4 alternate function TXD/RXD
+	UCA0CTL1 |= UCSWRST;                      // **Put state machine in reset**
+	UCA0CTL1 |= UCSSEL_2;                     // SMCLK
+	baud = fdco / bitRate;
+	if (baud < 255){
+		UCA0BR0 = baud;                             // @FDCO MHz: 115200 (see User's Guide)
+		UCA0BR1 = 0;
+	}
+	else{
+		/*UCA1BR1 = baud >> 8;
+		UCA1BR0 = baud & 0xFF;*/
+		UCA0BRW = baud;
+	}
+	///UCA1MCTL = UCBRS_0 + UCBRF_13 + UCOS16;   // Modln UCBRSx=0, UCBRFx=0,
+												// over sampling
+	UCA0CTL1 &= ~UCSWRST;                     	// **Initialize USCI state machine**
+	UCA0IE |= UCRXIE;                         // Enable USCI_A0 RX interrupt
+
+}
+
 
 /// initialize port 1
 void initPort1(void){

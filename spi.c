@@ -36,12 +36,13 @@ void setUCB1_3Wire_RCT(){
 
 	/// P3.6 : /CS this signal is managed "by hand" not automatically by FMS
 	//P3DIR |= BIT6;
-	P2DIR |= BIT1;
-	CE_INACTIVE;
+	P2DIR |= BIT3 + BIT6;
+	CE1_INACTIVE;
+	CE2_INACTIVE;
 
 	/// set alternate port function
-	P5SEL |= BIT5 + BIT4; 		/// P5.5 (UCB1CLK) e P5.4 (UCB1MISO)
-	P3SEL |= BIT7;						///  P3.7 (UCB1MOSI)
+	P3SEL |= BIT0 + BIT1; 				/// P3.0 (UCB1MOSI) e P3.1 (UCB1MISO)
+	P3SEL |= BIT2;						/// P3.2 (UCB1CLK)
 
 
 	UCB1CTL1 |= UCSWRST;			/// the state machine is in reset mode
