@@ -18,5 +18,13 @@
 #define CE1_INACTIVE       		P2OUT &= 0xF7
 #define CE2_INACTIVE       		P2OUT &= 0xBF
 
+/// formato dei comandi al giroscopio
+/// R/W CW/CCW asse centrale
+/// due byte di scrittura o lettura
+#define CW						(1 << 6)
+#define CCW						0
+#define	READ					(1 << 7)
+#define WRITE					0
+#define AC						(1 << 5)
 
 #endif /* SPI_H_ */

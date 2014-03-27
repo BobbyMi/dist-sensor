@@ -6,6 +6,9 @@
  */
 
 #include <msp430x552x.h>
+#include "init.h"
+#include "mem.h"
+
 
 /// initialize UART 1
 void initUART1(unsigned long bitRate, unsigned long fdco){
@@ -99,7 +102,7 @@ void initADC(unsigned char channel){
 
 /// TIMER A1 INIT
 /// genera un periodo di 50 ms @
-void initTIMER(unsigned long FDCO){
+void initTIMER(unsigned long freq){
 
 	unsigned int divisore;
 	///FDCO		22118400
@@ -107,15 +110,60 @@ void initTIMER(unsigned long FDCO){
 	TA1CCTL0 = CCIE;                          		// CCR0 interrupt enabled
 	/// 22118400 / 640 = 34560 count; Fck = 22118400 / 64 = 345600;  345600 / 20 = 17280 => 50 ms
 	/// oppure 24576000 / 640 = 38400; Fck = 24576000 / 64 = 384000 => 384000 / 20 = 19200 => 50 ms
-	divisore = FDCO / 640;
-	TA1CCR0 = divisore >> 1;						/// 50 ms @22,1184 MHz
+	divisore = freq / 640;
+	divisore = divisore / 10;						/// 10 ms @22,1184 MHz
+	TA1CCR0 = divisore >> 1;						/// 5  ms @22,1184 MHz
+	/// fdco / 64
 	TA1EX0	= 7;									/// source clock divided by 8
 	TA1CTL = TASSEL_2 + ID_3 + MC_1 + TACLR;        // SMCLK, upmode, divide by 8, clear TAR
 }
 
+
+extern volatile int flag;
+void setupCoeff(float);
 ///
-/// inizualizza lacune funzioni della MCU
+/// inizializza lacune funzioni della MCU
 ///
-void initMCU(void){
-	setupCoeff(1,25);
+void initMCU(unsigned long int f_dco){
+	/// set Internal DCO. This value is
+	/// 2^15*3^2*5^2*3, so it is a mutiple of 2^9*3^2*5^2 = 115200
+	setDCO(f_dco);
+	/// initialize UART1
+	initUART1(38400, f_dco);
+	/// init port 1
+	initPort1();
+	P1REN = 2;			/// 0 0 0 0 0 0 1 0  pull up
+	P1OUT = 2;
+
+	P4DIR = 0x80;
+	P4OUT = 0x80;
+
+	initADCmultiCH(6, 0, 5);
+	/// Enable of conversion and start a fake conversion
+	flag = 0;
+	ADC12CTL0 |= ADC12ENC + ADC12SC;
+	while(flag == 0);
+	flag = 0;
+
+	///
+	/// inizializza il timer
+	initTIMER(f_dco);
+
+	setupCoeff(1.25);
+
 }
+
+///
+/// inizializza le strutture dati
+void initDATA(_cellaDist cellaV[], int numEl){
+	int i;
+	for (i = 0; i < numEl; i++){
+	/// con questa significa che la chella e' vuota
+	cellaV[i].tipo = NONE;
+	cellaV[i].riga = cellaV[i].colonna = 0;
+	cellaV[i].attuale = NO;
+	cellaV[i].direzione = 0;
+	}
+
+}
+

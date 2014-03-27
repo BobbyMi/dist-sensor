@@ -9,7 +9,7 @@
 /// qui dichiaro i buffer di memoria
 ///
 volatile unsigned char RXBuffer[32];
-volatile int adcResults[24], mediaCampioni[6];
+int adcResults[24], mediaCampioni[6];
 
 /// costanti modificabili
 volatile float inv_m[8] =

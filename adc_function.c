@@ -21,16 +21,13 @@ int media(int* vettore, int* average, int n, int M){
 	int i;
 
 	/// intanto valuta se deve calcolare la media
-	if (flag){
-		flag = 0;
-		for (i = 0; i < n; i++){
-			average[i] += vettore[i];
-			average[i] >>= 1;
-		}
 
-		return 0;
+	for (i = 0; i < n; i++){
+		average[i] += vettore[i];
+		average[i] >>= 1;
 	}
-	return -1;
+
+	return 0;
 }
 				//a = A0, b = A1,..., f = A5
 /*
@@ -57,7 +54,7 @@ unsigned int* adc_function(char a, char b, char c, char d, char e, char f){
 void initADCmultiCH(unsigned char channel, unsigned char beg, unsigned char end){
 
 	/// init port P6.0 ... P6.5
-	P6SEL |= BIT0 + BIT1 + BIT2 + BIT3 + BIT4+ BIT5;
+	P6SEL |= BIT0 + BIT1 + BIT2 + BIT3 + BIT4 + BIT5;
 	/// set reference register for internal reference: enable, 2.5V
 	REFCTL0 = REFMSTR + REFVSEL_2 + REFON;
 	/// disable the AD unit
@@ -74,15 +71,15 @@ void initADCmultiCH(unsigned char channel, unsigned char beg, unsigned char end)
 	ADC12CTL0 |= ADC12SHT0_3 + ADC12ON;			/// sample time = 32 clk cycles. At 5MHz => 0.2u * 32 = 6us
 	ADC12CTL0 |= ADC12MSC;						/// enable multiple conversion
 
-	/// set the last channel in the sequence
+	/// set the  channel in the sequence
 	ADC12MCTL0 = ADC12SREF_1 + ADC12INCH_0;
 	ADC12MCTL1 = ADC12SREF_1 + ADC12INCH_1;
-	ADC12MCTL2 = ADC12SREF_1 + ADC12INCH_1;
-	ADC12MCTL3 = ADC12SREF_1 + ADC12INCH_1;
-	ADC12MCTL4 = ADC12SREF_1 + ADC12INCH_1;
+	ADC12MCTL2 = ADC12SREF_1 + ADC12INCH_2;
+	ADC12MCTL3 = ADC12SREF_1 + ADC12INCH_3;
+	ADC12MCTL4 = ADC12SREF_1 + ADC12INCH_4;
 
 	/// set the last channel in the sequence
-	ADC12MCTL5 = ADC12SREF_1 + ADC12INCH_1 	+ ADC12EOS;
+	ADC12MCTL5 = ADC12SREF_1 + ADC12INCH_5 	+ ADC12EOS;
 
 	__delay_cycles(300);                      	// 35us delay to allow Ref to settle
 		                                        // based on default DCO frequency.

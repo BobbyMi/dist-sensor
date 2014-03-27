@@ -12,44 +12,30 @@
 #include "compass_init.h"
 #include "mem.h"
 
-extern volatile unsigned int contatore;
+extern volatile unsigned int contatore, TIC, flag;
+extern int adcResults[];
 
 /*
  * main.c
  */
 void main(void) {
+	char interpCella = 0;
 	volatile unsigned int i;
 	volatile unsigned char valore;
 	double temperatura;
 	char conv[30], stato;
-	_cellaDist vCell[36], cellaAtt;
+	_cellaDist vCell[NUM_CELLE_DIST], cellaAtt;
 	unsigned char buff[8] = {0,0,0,0,0,0,0,0};
 	int x, y ,z;
 	gyro G;
 
 
-
 	// Stop watchdog timer
     WDTCTL = WDTPW | WDTHOLD;
-
-    /// set Internal DCO. This value is 2^15*3^2*5^2*3, so it is a mutiple of 2^9*3^2*5^2 = 115200
-    setDCO(FDCO);
-
-    /// initialize UART1
-    initUART1(38400, FDCO);
-
-    initMCU();
-    /// init port 1
-    initPort1();
-    P1REN = 2;			/// 0 0 0 0 0 0 1 0  pull up
-    P1OUT = 2;
-
-    P4DIR = 0x80;
-    P4OUT = 0x80;
-
-    initADCmultiCH(6, 0, 5);
-    initTIMER(FDCO);
-
+    /// inizializza il processore
+    initMCU(FDCO);
+    /// inizializza le strutture dati
+    initDATA(vCell, NUM_CELLE_DIST);
 	// Enable interrupt
 	 __bis_SR_register(GIE);
 
@@ -100,6 +86,31 @@ void main(void) {
 	i = 0;
     while(1){
     	i++;
+
+    	/// avvio attivita' pianificate:
+    	/* lettura sensori;
+    	 * richiesta giroscopio
+    	 * aggiorna il giroscopio
+    	 * mappatura del piano
+    	 * attivazione cella attuale
+    	 * allineamento al muro			*/
+
+    	if(TIC == 1){
+
+    		TIC = 0;
+    	}
+    	/// calcola la distanza misurata dai sensori
+    	if(flag){
+    		distanza(adcResults, cellaAtt.dist, 6);
+    		flag = 0;
+    	}
+    	/// ottenuta una cella interpreta il suo tipo ed eventuyalmente la copia
+    	/// nel vettore che mappa lo spazio del labirinto
+    	interpretaCella( vCell, &cellaAtt);
+
+
+
+
     	//temperatura = leggiTemepratura();
  //   	double2string(temperatura, conv);
     	//printf("temperatura %f\r\n", temperatura);

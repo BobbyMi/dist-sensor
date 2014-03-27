@@ -13,7 +13,7 @@ extern float inv_m[], soglia[];
 
 
 
-int distanza(int valMedi[], unsigned char distS[], int numElem){
+int distanza(int valMedi[], int distS[], int numElem){
 /// dal grafico si ha la seguente spezzata
 /// V - V0 = (V1 - V0)/(F1 - F0) * (F - F0) =>
 /// (V - V0) * (F1 - F0)/(V1 - V0) + F0 = F
@@ -23,7 +23,7 @@ int distanza(int valMedi[], unsigned char distS[], int numElem){
 	float f, f1;
 	for (i = 0; i < numElem; i++){
 		if (valMedi[i] < soglia[0]){
-			distS[i] = 255;
+			distS[i] = 400;
 			continue;
 		}
 		if (valMedi[i] < soglia[1]){
@@ -85,7 +85,7 @@ void setupCoeff(float coeff){
 ///
 /// trasforma un float in char
 ///
-void reduceToChar(float f, unsigned char distS[], int indice){
+void reduceToChar(float f, int distS[], int indice){
 	int distanzaR;
 	float f1;
 
@@ -125,3 +125,18 @@ void aggiornaCellaMobile(){
 
 }
 
+///
+/// interpreta se la cella attuale e' gia' mappata nel labirinto
+void interpretaCella( _cellaDist vCell[], _cellaDist * cAttPtr ){
+
+	int i;
+	/// scorre fino alla prima cella libera
+	while (vCell[i++].tipo != NONE);
+	/// e confronta la cella con quella attuale dove c'è l'ultima misura
+	if (cAttPtr->dist[0] < INF){
+	/// la distanza misurata e' minore del massimo misurabile dal sensore
+
+	}
+	vCell[0].tipo = CORRIDOIO;
+
+}

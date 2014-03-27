@@ -34,6 +34,8 @@ __interrupt void ADC12ISR (void){
 			adcResults[5] = ADC12MEM5;
 			/// segnala la necessita' di aggiornare la media
 			flag = 1;
+			ADC12CTL0 &= ~ADC12SC;				  /// mandatory when multiple conversion are enabled
+
 		break;
 		case 18: break;                           // Vector 18:  ADC12IFG6
 		case 20: break;                           // Vector 20:  ADC12IFG7
@@ -50,19 +52,29 @@ __interrupt void ADC12ISR (void){
 
 
 
-volatile unsigned int contatore = 0;
-
+volatile unsigned int contatore = 0, TIC = 0;
+static unsigned int locTime = 0;
 // Timer1 A0 interrupt service routine
+/// set up @ 200Hz => 50 ms
 #pragma vector=TIMER1_A0_VECTOR
 __interrupt void TIMER1_A0_ISR(void)
 {
 
-	//P1OUT ^= 1;
+	/// contao
 	contatore++;
-	if ((contatore & 7) == 0)
+	if (contatore == 5)
+		ADC12CTL0 |= ADC12SC;
+	if (contatore == 10){
+		/// ogni 10 tick da 5 ms
+		/// cioe' 50 ms segnala le operazioni di aggiornamento
+		TIC = 1;
+		contatore = 0;
+		locTime++;
+	}
+	/// blink led verde
+	if ((locTime & 8) != 0)
 		/// blink led verde
 		P4OUT ^= BIT7;
-
 }
 
 ///

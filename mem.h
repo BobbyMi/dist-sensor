@@ -8,35 +8,37 @@
 #ifndef MEM_H_
 #define MEM_H_
 
-#define NUM_ELEM 			5
+#define 	NUM_ELEM 			5
 
-#define	NODO				1
-#define	CORRIDOIO			2
-#define	OSTACOLO			4
-#define	VIETATA				8
+#define		NONE				0
+#define		NODO				1
+#define		CORRIDOIO			2
+#define		OSTACOLO			4
+#define		VIETATA				8
+
+#define		INF					400
 
 
 ///
 /// cella con i dati di distanza e tipo di percorso
 typedef struct{
-
-	unsigned char dist[5];
-	unsigned char attuale;
-	unsigned char id_cell;
-	unsigned char tipo;
-	unsigned char coeffParz;
-	unsigned char riga, colonna;
-	unsigned char direzione;
-	unsigned char reserved;
-
-
+	/// 18 byte; siccome uso 100 celle ho 1800 byte
+	/// per lo stack ne sono stati riservati 4096
+	int			  	dist[5];
+	unsigned char 	attuale;
+	unsigned char 	id_cell;
+	unsigned char 	tipo;
+	unsigned char 	coeffParz;
+	char 		  	riga, colonna;
+	unsigned char 	direzione;
+	unsigned char 	reserved;
 } _cellaDist;
 
 ///
 /// ditanza percorsa dalle ruote
 typedef struct{
-	unsigned char wDX;
-	unsigned char wSX;
+	int			wDX;
+	int			wSX;
 } _distRuote;
 
 

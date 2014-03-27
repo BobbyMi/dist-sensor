@@ -10,6 +10,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include "mem.h"
 
 
 float* adc_function(char a, char b, char c, char d, char e, char f);
@@ -24,7 +25,8 @@ void initTIMER(unsigned long FDCO);
 double leggiTemepratura();
 void double2string(double a, char* b);
 
-void initMCU(void);
+void initMCU(unsigned long int);
+void initDATA(_cellaDist [], int);
 void setupCoeff(float coeff);
 
 void initI2C_B1(unsigned long int fdco, unsigned long int speed, unsigned char devAddr);
@@ -36,24 +38,27 @@ int fputc(int _c, register FILE *_fp);
 int fputs(const char *_ptr, register FILE *_fp);
 
 
-void reduceToChar(float f, unsigned char distS[], int i);
-int distanza(int valMedi[], unsigned char distS[], int numElem);
+void reduceToChar(float f, int distS[], int i);
+int distanza(int valMedi[], int distS[], int numElem);
+void interpretaCella( _cellaDist vCell[], _cellaDist * );
+
 
 
 ///////////////////////////////////////////////
+#define		NO				0
+#define		YES				1
 #define		NACK_ERR		1
 #define		OK				0
 #define		BUS_BUSY		2
 #define		NOT_PRESENT		3
 #define		OFF				4
 
-#define 		on  		1
-#define	 		off 		0
+#define 	on		  		1
+#define	 	off 			0
 
 #define 	DIM_RX_BUFF		32
 
-
-
+#define		NUM_CELLE_DIST	100
 //////////////////////////////////////////////
 ///
 /// CLOCK FREQUENCY
